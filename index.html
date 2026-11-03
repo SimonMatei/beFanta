@@ -16,8 +16,8 @@
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png?v=4">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="manifest" href="assets/manifest.webmanifest">
-<link rel="stylesheet" href="assets/style.css?v=28eb7f3f8c">
-<script src="assets/app.js?v=9075ce360a" defer></script>
+<link rel="stylesheet" href="assets/style.css?v=3d7c15ec60">
+<script src="assets/app.js?v=d5d4f933b6" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -73,6 +73,10 @@
 <div class="overlay" id="imgModal" hidden role="dialog" aria-modal="true" aria-labelledby="iTitle">
   <div class="dialog">
     <h3 id="iTitle">Immagine pronta</h3>
+    <div class="seg" role="tablist" aria-label="Tipo di immagine">
+      <button type="button" role="tab" id="vList" class="on" aria-selected="true">Lista bonus</button>
+      <button type="button" role="tab" id="vDet" aria-selected="false">Dettaglio voti</button>
+    </div>
     <img id="iPrev" alt="Lista bonus difesa">
     <button class="cta" id="iShare" type="button" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>

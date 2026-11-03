@@ -112,26 +112,38 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){conf.hidden=true;do
 function loadImg(src){return new Promise(r=>{const im=new Image();im.onload=()=>r(im);im.onerror=()=>r(null);im.src=src})}
 function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
 const LV={0:["rgba(255,255,255,.08)","rgba(226,245,237,.6)"],1:["rgba(159,242,208,.18)","#c8f8e4"],2:["rgba(159,242,208,.34)","#e6fff4"],3:["#5fdcae","#03241b"],4:["#9ff2d0","#03241b"],5:["#e3303f","#ffffff"]};
-async function buildImage(){
+async function buildImage(mode){
   try{await document.fonts.ready}catch(e){}
-  const S="Manrope,Arial,sans-serif",U="Manrope,Arial,sans-serif";
-  const res=results(),W=780,head=250,rowH=118,pad=48,H=head+res.length*rowH+40;
+  const U="Manrope,Arial,sans-serif",det=mode==="detail";
+  const res=results(),pad=48,head=det?286:250,rowH=det?124:118,W=det?1080:780,H=head+res.length*rowH+40;
   const cv=document.createElement("canvas");cv.width=W;cv.height=H;const c=cv.getContext("2d");
   const g=c.createRadialGradient(W/2,H*.18,40,W/2,H*.18,H*.85);g.addColorStop(0,"#13896a");g.addColorStop(.38,"#0a5a43");g.addColorStop(1,"#03241b");
   c.fillStyle=g;c.fillRect(0,0,W,H);
-    c.fillStyle="#ffffff";c.font=`700 96px ${S}`;c.fillText("Bonus",pad,170);const bw=c.measureText("Bonus ").width;
+  c.fillStyle="#ffffff";c.font=`700 96px ${U}`;c.fillText("Bonus",pad,170);const bw=c.measureText("Bonus ").width;
   c.fillStyle="#9ff2d0";c.fillText("difesa",pad+bw,170);
-  c.fillStyle="rgba(226,245,237,.7)";c.font=`600 28px ${U}`;c.fillText("beFanta · "+todayStr,pad,222);
+  c.fillStyle="rgba(226,245,237,.7)";c.font=`600 28px ${U}`;c.fillText("beFanta · "+(det?"dettaglio voti · ":"")+todayStr,pad,222);
+  const tw=130,th=64,tx=W-pad-tw+4;           // bonus pill
+  const D=60,G=12,vx0=tx-28-(4*D+3*G);         // vote discs (detail view)
+  if(det){c.font=`800 18px ${U}`;c.fillStyle="rgba(226,245,237,.6)";c.textAlign="center";
+    ["POR","DIF","DIF","DIF"].forEach((l,j)=>c.fillText(l,vx0+D/2+j*(D+G),head-6));
+    c.fillText("MEDIA",vx0-70,head-6);c.fillText("BONUS",tx+tw/2,head-6);c.textAlign="left"}
   const imgs=await Promise.all(res.map(x=>loadImg(x.logo)));
   res.forEach((x,k)=>{const y=head+10+k*rowH;
     c.fillStyle="rgba(255,255,255,.07)";rr(c,pad-16,y,W-2*(pad-16),rowH-14,30);c.fill();
     c.strokeStyle="rgba(255,255,255,.12)";c.lineWidth=2;c.stroke();
     const cx=pad+40,cy=y+(rowH-14)/2;
     c.save();c.beginPath();c.arc(cx,cy,38,0,Math.PI*2);c.closePath();c.fillStyle="#fff";c.fill();c.clip();if(imgs[k])c.drawImage(imgs[k],cx-38,cy-38,76,76);c.restore();
-    c.fillStyle="#f2fbf7";c.font=`800 34px ${U}`;let nm=x.name;while(c.measureText(nm).width>W-pad-150-(cx+62)-20&&nm.length>3)nm=nm.slice(0,-2)+"…";
-    c.fillText(nm,cx+62,cy-4);
-    c.fillStyle="rgba(226,245,237,.66)";c.font=`600 25px ${U}`;c.fillText(x.avg==null?"voti non inseriti":"media "+it(x.avg),cx+62,cy+32);
-    const [bg,fg]=x.avg==null?LV[0]:LV[Math.min(x.l,5)];const tw=130,th=64,tx=W-pad-tw+4,ty=cy-th/2;
+    const nameMax=(det?vx0-140:tx)-(cx+62)-20;
+    c.fillStyle="#f2fbf7";c.font=`800 ${det?31:34}px ${U}`;let nm=x.name;while(c.measureText(nm).width>nameMax&&nm.length>3)nm=nm.slice(0,-2)+"…";
+    if(det){c.fillText(nm,cx+62,cy+11);
+      x.vals.forEach((v,j)=>{const dx=vx0+D/2+j*(D+G);c.beginPath();c.arc(dx,cy,D/2,0,Math.PI*2);
+        c.fillStyle=j===0?"#e3303f":"#f2fbf7";c.fill();
+        c.fillStyle=j===0?"#ffffff":"#073326";c.font=`800 ${v!=null&&!isNaN(v)&&it(v).length>2?22:26}px ${U}`;c.textAlign="center";
+        c.fillText(v==null||isNaN(v)?"–":it(v),dx,cy+9);c.textAlign="left"});
+      c.fillStyle="#f2fbf7";c.font=`800 30px ${U}`;c.textAlign="center";c.fillText(x.avg==null?"–":it(x.avg),vx0-70,cy+11);c.textAlign="left";
+    }else{c.fillText(nm,cx+62,cy-4);
+      c.fillStyle="rgba(226,245,237,.66)";c.font=`600 25px ${U}`;c.fillText(x.avg==null?"voti non inseriti":"media "+it(x.avg),cx+62,cy+32)}
+    const [bg,fg]=x.avg==null?LV[0]:LV[Math.min(x.l,5)];const ty=cy-th/2;
     c.fillStyle=bg;rr(c,tx,ty,tw,th,32);c.fill();c.fillStyle=fg;c.textAlign="center";
     c.font=x.avg==null?`600 24px ${U}`:`800 38px ${U}`;c.fillText(x.avg==null?"–":fmtB(x.bonus),tx+tw/2,ty+th/2+(x.avg==null?9:13));c.textAlign="left";
   });
@@ -140,15 +152,18 @@ async function buildImage(){
 /* Build the image first, then let the user share/save it with a fresh tap (iPhone requires the tap for the share sheet) */
 let shot=null;
 const canShareFiles=f=>{try{return !!(navigator.canShare&&navigator.canShare({files:[f]}))}catch(e){return false}};
+let view="list";
+async function makeShot(){const cv=await buildImage(view);const url=cv.toDataURL("image/png");
+  const blob=await new Promise(r=>cv.toBlob(r,"image/png"));
+  const name=(view==="detail"?"dettaglio-voti-":"bonus-difesa-")+new Date().toISOString().slice(0,10)+".png";
+  shot={url,name,file:new File([blob],name,{type:"image/png"})};
+  const p=document.getElementById("iPrev");p.src=url;p.alt=view==="detail"?"Dettaglio voti":"Lista bonus difesa";return shot}
+function setView(v){view=v;[["vList","list"],["vDet","detail"]].forEach(([id,k])=>{const b=document.getElementById(id);b.classList.toggle("on",k===v);b.setAttribute("aria-selected",k===v)})}
+document.getElementById("vList").onclick=async()=>{if(view==="list")return;setView("list");await makeShot()};
+document.getElementById("vDet").onclick=async()=>{if(view==="detail")return;setView("detail");await makeShot()};
 document.getElementById("download").onclick=async()=>{
   const btn=document.getElementById("download");btn.disabled=true;
-  try{const cv=await buildImage();const url=cv.toDataURL("image/png");
-    const blob=await new Promise(r=>cv.toBlob(r,"image/png"));
-    const name="bonus-difesa-"+new Date().toISOString().slice(0,10)+".png";
-    const file=new File([blob],name,{type:"image/png"});
-    shot={url,name,file};
-    const share=canShareFiles(file);
-    document.getElementById("iPrev").src=url;
+  try{await makeShot();const share=canShareFiles(shot.file);
     document.getElementById("iShare").hidden=!share;
     document.getElementById("iSave").hidden=share;
     document.getElementById("iHint").textContent=share
