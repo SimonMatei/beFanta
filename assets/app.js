@@ -50,6 +50,9 @@ teamsEl.addEventListener("input",e=>{const m=e.target.id.match(/^v(\d+)_(\d)$/);
 teamsEl.addEventListener("keydown",e=>{if(e.key!=="Enter")return;const k=ORDER.indexOf(e.target.id);if(k<0)return;e.preventDefault();
   const nx=document.getElementById(ORDER[k+1]);if(nx){nx.focus();nx.select()}else e.target.blur()});
 
+/* Tap anywhere outside a field: confirm the vote and close the phone keyboard */
+document.addEventListener("pointerdown",e=>{const a=document.activeElement;
+  if(a&&a.matches("input,textarea")&&!e.target.closest("input,textarea,select,label"))a.blur()},true);
 function results(){return TEAMS.map((t,i)=>{const vals=state.votes[i].map(parseVote);
   const filled=vals.filter(v=>v!==null&&!Number.isNaN(v)).length;const ok=filled===4;
   const avg=ok?vals.reduce((a,b)=>a+b,0)/4:null;const l=ok?level(avg):null;
