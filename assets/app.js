@@ -34,8 +34,8 @@ TEAMS.forEach((t,i)=>{
   const el=document.createElement("article");el.className="card glass";el.setAttribute("aria-label",t.n);
   el.innerHTML=`<div class="card-head"><img class="crest" src="${t.logo}" alt=""><div class="tname">${esc(t.n)}</div><div class="state" id="st${i}"></div></div>
     <div class="pitch"><i class="ln half"></i><i class="ln ctr"></i><i class="ln box18"></i><i class="ln box6"></i>
-      ${[1,2,3,0].map(j=>`<div class="pl ${POS[j][1]}"><input id="v${i}_${j}" inputmode="decimal" enterkeyhint="next" autocomplete="off" maxlength="5" placeholder="–"
-        aria-label="${esc(t.n)} – ${j===0?"portiere":"difensore "+j}" value="${esc(state.votes[i][j]||"")}"><span>${POS[j][0]}</span></div>`).join("")}</div>
+      ${[1,2,3,0].map(j=>`<div class="pl ${POS[j][1]}"><div class="disc"><input id="v${i}_${j}" inputmode="decimal" enterkeyhint="next" autocomplete="off" maxlength="5" placeholder="–"
+        aria-label="${esc(t.n)} – ${j===0?"portiere":"difensore "+j}" value="${esc(state.votes[i][j]||"")}"></div><span>${POS[j][0]}</span></div>`).join("")}</div>
     <div class="res">
       <div class="tile media" id="mt${i}"><span class="k">Media</span><span class="v" id="avg${i}">–</span><span class="s" id="ms${i}"></span></div>
       <div class="tile lv0" id="bt${i}"><span class="k">Bonus difesa</span><span class="v" id="bon${i}">–</span><span class="s" id="bs${i}"></span></div>
@@ -65,7 +65,7 @@ function render(changed){
   const res=results(),r=rules();let done=0;
   const lo=5.5,hi=Math.max(7.5,r[r.length-1][0]+.5);
   res.forEach(x=>{const i=x.i;
-    x.vals.forEach((v,j)=>document.getElementById(`v${i}_${j}`).classList.toggle("bad",Number.isNaN(v)));
+    x.vals.forEach((v,j)=>document.getElementById(`v${i}_${j}`).parentElement.classList.toggle("bad",Number.isNaN(v)));
     const $=id=>document.getElementById(id+i);
     const mt=$("mt"),bt=$("bt"),st=$("st"),lt=$("lt"),lm=$("lm");
     if(x.avg==null){

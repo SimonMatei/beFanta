@@ -72,14 +72,17 @@ button{cursor:pointer;border:0;background:none}
 .pitch .half{left:-2px;right:-2px;top:-2px;height:0;border-width:2px 0 0}
 .pitch .ctr{left:50%;top:-46px;width:92px;height:92px;transform:translateX(-50%);border-radius:50%}
 .pl{position:absolute;transform:translate(-50%,-50%);display:grid;justify-items:center;gap:4px}
-.pl input{width:58px;height:58px;border-radius:50%;border:2px solid transparent;padding:0;color:var(--disc-ink);
+/* The circle is drawn by .disc; the input inside is fully transparent (avoids iOS Safari square artifacts) */
+.disc{width:58px;height:58px;border-radius:50%;overflow:hidden;border:0;
   background:radial-gradient(circle at 34% 28%,#ffffff 0 30%,#e4f3ec 75%);
-  text-align:center;font:800 21px var(--ui);font-variant-numeric:tabular-nums;box-shadow:0 8px 18px rgba(0,0,0,.35),inset 0 -3px 6px rgba(7,51,38,.12);-webkit-appearance:none;appearance:none}
-.pl input::placeholder{color:#9ab8ab}
-.pl input:focus{outline:none;border-color:var(--mint);box-shadow:0 0 0 4px rgba(159,242,208,.25),0 8px 18px rgba(0,0,0,.35)}
-.pl input.bad{border-color:var(--danger)}
+  box-shadow:0 8px 18px rgba(0,0,0,.35),inset 0 -3px 6px rgba(7,51,38,.12);isolation:isolate}
+.disc:focus-within{box-shadow:0 0 0 3px var(--mint),0 0 0 7px rgba(159,242,208,.22),0 8px 18px rgba(0,0,0,.35)}
+.disc.bad{box-shadow:0 0 0 3px var(--danger),0 8px 18px rgba(0,0,0,.35)}
+.pl input{display:block;width:100%;height:100%;margin:0;padding:0;border:0;border-radius:0;outline:none;background:transparent;box-shadow:none;
+  -webkit-appearance:none;appearance:none;color:var(--disc-ink);text-align:center;font:800 21px var(--ui);font-variant-numeric:tabular-nums;caret-color:currentColor}
 .pl span{font-size:10px;font-weight:800;letter-spacing:.12em;color:#fff;background:rgba(0,0,0,.35);padding:2px 8px;border-radius:99px}
-.pl.gk input{background:radial-gradient(circle at 34% 28%,#ff6a74 0 22%,#e3303f 60%,#b81d2b 100%);color:#fff}
+.pl.gk .disc{background:radial-gradient(circle at 34% 28%,#ff6a74 0 22%,#e3303f 60%,#b81d2b 100%)}
+.pl.gk input{color:#fff}
 .pl.gk input::placeholder{color:rgba(255,255,255,.65)}
 .p0{left:50%;top:78%} .p1{left:18%;top:30%} .p2{left:50%;top:26%} .p3{left:82%;top:30%}
 
