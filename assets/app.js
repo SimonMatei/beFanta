@@ -13,7 +13,7 @@ function cleanRules(r){if(!Array.isArray(r)||r.length!==DEFAULT_RULES.length)ret
 function load(){try{const s=JSON.parse(localStorage.getItem(KEY));
     if(s&&Array.isArray(s.votes)&&s.votes.length===TEAMS.length){
       return {votes:TEAMS.map((_,i)=>[0,1,2,3].map(j=>cleanVote(Array.isArray(s.votes[i])?s.votes[i][j]:""))),
-        rules:cleanRules(s.rules)||DEFAULT_RULES.map(r=>r.slice()),example:s.example===true}}}catch(e){}
+        rules:DEFAULT_RULES.map(r=>r.slice()),example:s.example===true}}}catch(e){}
   return {votes:EXAMPLE.map(r=>r.slice()),rules:DEFAULT_RULES.map(r=>r.slice()),example:true}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
 state=load();
@@ -101,15 +101,6 @@ const navT=document.getElementById("navTeams"),navL=document.getElementById("nav
 [navT,navL].forEach(a=>a.addEventListener("click",e=>{e.preventDefault();document.querySelector(a.getAttribute("href")).scrollIntoView({behavior:"smooth",block:"start"});
   navT.classList.toggle("on",a===navT);navL.classList.toggle("on",a===navL)}));
 
-function renderRules(){const s=state.rules.map((r,k)=>({r,k})).sort((a,b)=>a.r[0]-b.r[0]);
-  document.getElementById("rulesBody").innerHTML=`<tr><td>—</td><td>${it(s[0].r[0])}</td><td>0</td></tr>`+s.map(({r,k},idx)=>
-    `<tr><td><input id="rt${k}" inputmode="decimal" value="${it(r[0])}" aria-label="Soglia"></td><td>${s[idx+1]?it(s[idx+1].r[0]):"—"}</td>
-     <td><input id="rb${k}" inputmode="decimal" value="${it(r[1])}" aria-label="Bonus"></td></tr>`).join("")}
-document.getElementById("rulesBody").addEventListener("change",e=>{const m=e.target.id.match(/^r([tb])(\d+)$/);if(!m)return;
-  const n=Number(e.target.value.trim().replace(",","."));if(e.target.value.trim()!==""&&isFinite(n)&&n>=-10&&n<=20)state.rules[m[2]][m[1]==="t"?0:1]=n;
-  save();renderRules();render()});
-document.getElementById("resetRules").onclick=()=>{state.rules=DEFAULT_RULES.map(r=>r.slice());save();renderRules();render()};
-
 const conf=document.getElementById("confirm");
 document.getElementById("reset").onclick=()=>{conf.hidden=false;document.getElementById("cNo").focus()};
 document.getElementById("cNo").onclick=()=>{conf.hidden=true};
@@ -180,4 +171,4 @@ document.getElementById("copy").onclick=()=>{const t=text(),btn=document.getElem
   const fb=()=>{a.hidden=false;a.value=t;a.focus();a.select();btn.textContent="Seleziona e copia il testo"};
   try{navigator.clipboard.writeText(t).then(()=>{btn.textContent="Copiato ✓";setTimeout(()=>btn.textContent="Copia come testo",1800)},fb)}catch(e){fb()}};
 
-renderRules();render();
+render();
