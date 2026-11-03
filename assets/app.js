@@ -77,8 +77,8 @@ function render(changed){
     }else{done++;
       mt.className="tile media";bt.className="tile "+lv(x.l);
       $("avg").textContent=it(x.avg);$("bon").textContent=fmtB(x.bonus);
-      $("ms").textContent=`${it(x.vals.reduce((a,b)=>a+b,0))} ÷ 4`;
-      $("bs").textContent=x.l<r.length?`+${it(r[x.l][0]-x.avg)} per ${fmtB(r[x.l][1])}`:"bonus massimo";
+      $("ms").textContent="";
+      $("bs").textContent="";
       st.textContent="✓ completa";st.className="state ok";
       $("pf").style.width=Math.max(2,Math.min(100,(x.avg-lo)/(hi-lo)*100))+"%";
       lt.className="tag "+lv(x.l);lt.textContent=fmtB(x.bonus);lm.textContent="media "+it(x.avg);

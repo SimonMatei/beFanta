@@ -85,7 +85,8 @@ button{cursor:pointer;border:0;background:none}
 .tile{border-radius:20px;padding:12px 14px 11px;display:grid;gap:2px;min-width:0}
 .tile .k{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
 .tile .v{font:800 42px/1 var(--ui);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
-.tile .s{font-size:12px;font-weight:600;opacity:.75;min-height:1.4em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .s:empty{display:none}
+.tile .s{font-size:12px;font-weight:600;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tile.media{background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.06)}
 .tile.empty .v{opacity:.25}
 .lv0{background:var(--l0);color:var(--l0-ink)} .lv1{background:var(--l1);color:var(--l1-ink)} .lv2{background:var(--l2);color:var(--l2-ink)}
