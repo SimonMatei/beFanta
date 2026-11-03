@@ -148,7 +148,7 @@ details.panel[open] summary::after{content:"–"}
 .dialog .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .btn{height:48px;border-radius:999px;font-weight:800;background:var(--glass-hi);border:1px solid var(--edge)}
 .btn.red{background:var(--cherry);border-color:var(--cherry);color:#fff}
-.dialog img{width:100%;max-height:52vh;object-fit:contain;border-radius:16px;display:block;-webkit-touch-callout:default}
+.dialog img{display:block;width:auto;height:auto;max-width:100%;max-height:52vh;margin:0 auto;border-radius:18px;-webkit-touch-callout:default;box-shadow:0 12px 30px -14px rgba(0,0,0,.6)}
 .dialog .hint{font-size:13px;color:var(--muted);margin:-4px 2px 0;text-align:center}
 .dialog .cta{width:100%}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid var(--edge)}
