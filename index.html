@@ -79,8 +79,16 @@
 <div class="overlay" id="imgModal" hidden role="dialog" aria-modal="true" aria-labelledby="iTitle">
   <div class="dialog">
     <h3 id="iTitle">Immagine pronta</h3>
-    <p>Se il download non parte, tieni premuto sull'immagine e scegli "Salva" o "Condividi".</p>
     <img id="iPrev" alt="Lista bonus difesa">
+    <button class="cta" id="iShare" type="button" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>
+      Invia su WhatsApp o salva
+    </button>
+    <button class="cta" id="iSave" type="button" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+      Salva immagine
+    </button>
+    <p class="hint" id="iHint"></p>
     <button class="btn" id="iClose" type="button">Chiudi</button>
   </div>
 </div>

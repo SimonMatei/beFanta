@@ -148,17 +148,31 @@ async function buildImage(){
   c.fillStyle="rgba(226,245,237,.5)";c.font=`500 24px ${U}`;c.fillText("Media di portiere + 3 migliori difensori · fasce D Factor",pad,H-46);
   return cv;
 }
+/* Build the image first, then let the user share/save it with a fresh tap (iPhone requires the tap for the share sheet) */
+let shot=null;
+const canShareFiles=f=>{try{return !!(navigator.canShare&&navigator.canShare({files:[f]}))}catch(e){return false}};
 document.getElementById("download").onclick=async()=>{
   const btn=document.getElementById("download");btn.disabled=true;
   try{const cv=await buildImage();const url=cv.toDataURL("image/png");
     const blob=await new Promise(r=>cv.toBlob(r,"image/png"));
     const name="bonus-difesa-"+new Date().toISOString().slice(0,10)+".png";
-    let shared=false;
-    try{const file=new File([blob],name,{type:"image/png"});
-      if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:"Bonus difesa"});shared=true}}catch(e){if(e&&e.name==="AbortError")shared=true}
-    if(!shared){try{const a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()}catch(e){}
-      document.getElementById("iPrev").src=url;document.getElementById("imgModal").hidden=false}
+    const file=new File([blob],name,{type:"image/png"});
+    shot={url,name,file};
+    const share=canShareFiles(file);
+    document.getElementById("iPrev").src=url;
+    document.getElementById("iShare").hidden=!share;
+    document.getElementById("iSave").hidden=share;
+    document.getElementById("iHint").textContent=share
+      ?"Si apre il menu Condividi: scegli WhatsApp per inviarla all'admin, oppure «Salva immagine» per tenerla nelle Foto."
+      :"Se il salvataggio non parte (succede nelle anteprime), tieni premuto sull'immagine e scegli «Salva in Foto».";
+    document.getElementById("imgModal").hidden=false;
   }finally{btn.disabled=false}};
+document.getElementById("iShare").onclick=()=>{if(!shot)return;
+  navigator.share({files:[shot.file],title:"Bonus difesa"}).then(()=>{document.getElementById("imgModal").hidden=true}).catch(e=>{
+    if(!e||e.name!=="AbortError")document.getElementById("iHint").textContent="Condivisione non disponibile qui: tieni premuto sull'immagine e scegli «Salva in Foto»."})};
+document.getElementById("iSave").onclick=()=>{if(!shot)return;
+  try{const a=document.createElement("a");a.href=shot.url;a.download=shot.name;document.body.appendChild(a);a.click();a.remove()}catch(e){}
+  document.getElementById("iHint").textContent="Immagine salvata nei Download. Se non la trovi, tieni premuto sull'immagine (o clic destro) e scegli «Salva immagine»."};
 document.getElementById("iClose").onclick=()=>{document.getElementById("imgModal").hidden=true};
 
 function text(){return ["🛡️ Bonus difesa · "+todayStr,""].concat(results().map(x=>x.avg==null?`${x.name}: voti mancanti`:`${x.name}: media ${it(x.avg)} → ${fmtB(x.bonus)}`)).join("\n")}
