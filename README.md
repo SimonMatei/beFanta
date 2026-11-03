@@ -15,7 +15,7 @@ Per ogni squadra si inseriscono il voto del portiere e dei 3 migliori difensori:
 
 Le fasce sono modificabili dal sito. I voti restano salvati sul dispositivo (localStorage).
 
-Online su https://befanta.it (GitHub Pages)
+Online su https://befanta.it (Cloudflare Pages, intestazioni di sicurezza nel file `_headers`)
 
 ## Sicurezza e privacy
 
