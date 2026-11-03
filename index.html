@@ -12,30 +12,30 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Instrument+Sans:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: navy masthead with pink accent; grid of team cards (half-pitch with POR + 3 DIF discs, big Media/Bonus); sticky "Bonus giornata" list on desktop, stacked on phone */
+/* Layout: navy masthead with gold accent, blue bonus scale; grid of team cards (half-pitch with POR + 3 DIF discs, big Media/Bonus); sticky "Bonus giornata" list on desktop, stacked on phone */
 :root{
-  --bg:#f7f1f4; --surface:#ffffff; --ink:#0e1a3a; --muted:#69708a; --line:#ebe1e7;
-  --navy:#0e1a3a; --navy2:#16244d; --pink:#e5407f; --pink-soft:#fde4ee;
+  --bg:#f1f3f8; --surface:#ffffff; --ink:#0e1a3a; --muted:#666f88; --line:#e1e5ef;
+  --navy:#0e1a3a; --navy2:#16244d; --pink:#2f5bd3; --pink-soft:#e3ebff; --gold:#f2b321; --gold-ink:#1a1200;
   --pitch:#14234a; --pitch2:#182a57; --chalk:rgba(255,255,255,.32); --disc:#ffffff; --disc-ink:#0e1a3a;
-  --l0:#eceaf0; --l0-ink:#69708a; --l1:#fde0ec; --l1-ink:#8a1747; --l2:#f8b3cf; --l2-ink:#6d0f37;
-  --l3:#ee6b9f; --l3-ink:#ffffff; --l4:#cc2c6b; --l4-ink:#ffffff; --l5:#0e1a3a; --l5-ink:#ff8fbb;
+  --l0:#e9ecf3; --l0-ink:#666f88; --l1:#dde7ff; --l1-ink:#1d3a8a; --l2:#adc4ff; --l2-ink:#132a6b;
+  --l3:#5b84f0; --l3-ink:#ffffff; --l4:#2a4fc0; --l4-ink:#ffffff; --l5:#f2b321; --l5-ink:#1a1200;
   --danger:#d0342c; --shadow:0 1px 0 rgba(14,26,58,.04),0 14px 34px -14px rgba(14,26,58,.22);
   --display:"Big Shoulders Display","Oswald","Arial Narrow",Impact,sans-serif;
   --body:"Instrument Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#080d1d; --surface:#111a33; --ink:#eef0f7; --muted:#9aa2bd; --line:#222c4a;
-  --navy:#0b1431; --navy2:#13204a; --pink:#ff5c98; --pink-soft:#3a1630;
+  --navy:#0b1431; --navy2:#13204a; --pink:#7c9cff; --pink-soft:#17244a; --gold:#f5c04a; --gold-ink:#1a1200;
   --pitch:#0f1b3d; --pitch2:#13224a; --chalk:rgba(255,255,255,.22); --disc:#f3f4fa; --disc-ink:#0e1a3a;
-  --l0:#1b2543; --l0-ink:#9aa2bd; --l1:#3a1a33; --l1-ink:#ffb3d0; --l2:#5c1c45; --l2-ink:#ffd3e4;
-  --l3:#b8326f; --l3-ink:#ffffff; --l4:#ff5c98; --l4-ink:#1a0610; --l5:#ffd1e3; --l5-ink:#0e1a3a;
+  --l0:#1b2543; --l0-ink:#9aa2bd; --l1:#1a2a55; --l1-ink:#b9cbff; --l2:#223a7a; --l2-ink:#dbe4ff;
+  --l3:#3b62d6; --l3-ink:#ffffff; --l4:#7c9cff; --l4-ink:#0a1430; --l5:#f5c04a; --l5-ink:#1a1200;
   --danger:#ff7a6e; --shadow:none; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#080d1d; --surface:#111a33; --ink:#eef0f7; --muted:#9aa2bd; --line:#222c4a;
-  --navy:#0b1431; --navy2:#13204a; --pink:#ff5c98; --pink-soft:#3a1630;
+  --navy:#0b1431; --navy2:#13204a; --pink:#7c9cff; --pink-soft:#17244a; --gold:#f5c04a; --gold-ink:#1a1200;
   --pitch:#0f1b3d; --pitch2:#13224a; --chalk:rgba(255,255,255,.22); --disc:#f3f4fa; --disc-ink:#0e1a3a;
-  --l0:#1b2543; --l0-ink:#9aa2bd; --l1:#3a1a33; --l1-ink:#ffb3d0; --l2:#5c1c45; --l2-ink:#ffd3e4;
-  --l3:#b8326f; --l3-ink:#ffffff; --l4:#ff5c98; --l4-ink:#1a0610; --l5:#ffd1e3; --l5-ink:#0e1a3a;
+  --l0:#1b2543; --l0-ink:#9aa2bd; --l1:#1a2a55; --l1-ink:#b9cbff; --l2:#223a7a; --l2-ink:#dbe4ff;
+  --l3:#3b62d6; --l3-ink:#ffffff; --l4:#7c9cff; --l4-ink:#0a1430; --l5:#f5c04a; --l5-ink:#1a1200;
   --danger:#ff7a6e; --shadow:none; color-scheme:dark}
 
 [hidden]{display:none!important}
@@ -44,17 +44,17 @@ html{background:var(--bg)}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;margin:0}
 button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none}
-:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .gutter{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
 
 /* ---------- Masthead ---------- */
-.mast{background:var(--navy);color:#fff;position:relative;overflow:hidden;border-bottom:5px solid var(--pink)}
+.mast{background:var(--navy);color:#fff;position:relative;overflow:hidden;border-bottom:5px solid var(--gold)}
 .mast::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 70px,rgba(255,255,255,.03) 70px 140px);pointer-events:none}
 .mast::after{content:"";position:absolute;right:-90px;top:50%;width:260px;height:260px;border:2px solid rgba(255,255,255,.1);border-radius:50%;transform:translateY(-50%);pointer-events:none}
 .mast-in{position:relative;max-width:1180px;margin:0 auto;padding-block:26px 24px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 24px}
-.kicker{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--pink)}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
 .wordmark{font-family:var(--display);font-weight:900;font-size:clamp(50px,9vw,86px);line-height:.85;margin:6px 0 0;letter-spacing:-.01em}
-.wordmark em{font-style:normal;color:var(--pink)}
+.wordmark em{font-style:normal;color:var(--gold)}
 .reset{height:46px;padding:0 18px;border-radius:12px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.3);color:#fff;font-weight:700;display:flex;align-items:center;gap:8px}
 .reset:hover{background:rgba(255,255,255,.16)}
 .reset svg{width:18px;height:18px}
@@ -83,11 +83,11 @@ button{cursor:pointer;border:0;background:none}
 .pl input{width:58px;height:58px;border-radius:50%;border:3px solid transparent;background:var(--disc);color:var(--disc-ink);padding:0;
   text-align:center;font:900 24px var(--display);font-variant-numeric:tabular-nums;box-shadow:0 4px 12px rgba(0,0,0,.35);-webkit-appearance:none;appearance:none}
 .pl input::placeholder{color:#aab0c4}
-.pl input:focus{outline:none;border-color:var(--pink)}
+.pl input:focus{outline:none;border-color:var(--gold)}
 .pl input.bad{border-color:var(--danger)}
 .pl span{font-size:10px;font-weight:700;letter-spacing:.12em;color:#fff;background:rgba(0,0,0,.4);padding:2px 7px;border-radius:99px}
-.pl.gk input{background:var(--pink);color:#fff}
-.pl.gk input::placeholder{color:rgba(255,255,255,.6)}
+.pl.gk input{background:var(--gold);color:var(--gold-ink)}
+.pl.gk input::placeholder{color:rgba(26,18,0,.45)}
 .p0{left:50%;top:78%} .p1{left:18%;top:30%} .p2{left:50%;top:26%} .p3{left:82%;top:30%}
 
 .res{display:grid;grid-template-columns:1fr 1.1fr;gap:10px;padding:14px 12px 12px}
@@ -109,7 +109,7 @@ button{cursor:pointer;border:0;background:none}
 .panel{background:var(--surface);border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden}
 .panel-top{background:var(--navy);color:#fff;padding:16px 18px 14px;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 .panel-top h2{font:900 24px var(--display);text-transform:uppercase;letter-spacing:.02em;margin:0}
-.panel-top small{font-size:12px;font-weight:600;color:var(--pink);white-space:nowrap}
+.panel-top small{font-size:12px;font-weight:600;color:var(--gold);white-space:nowrap}
 .list{list-style:none;margin:0;padding:6px 0}
 .list li{display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:12px;padding:9px 18px}
 .list li+li{border-top:1px solid var(--line)}
@@ -342,25 +342,25 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){conf.hidden=true;do
 /* Image export (for WhatsApp) */
 function loadImg(src){return new Promise(r=>{const im=new Image();im.onload=()=>r(im);im.onerror=()=>r(null);im.src=src})}
 function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
-const LV={0:["#eceaf0","#69708a"],1:["#fde0ec","#8a1747"],2:["#f8b3cf","#6d0f37"],3:["#ee6b9f","#ffffff"],4:["#cc2c6b","#ffffff"],5:["#0e1a3a","#ff8fbb"]};
+const LV={0:["#e9ecf3","#666f88"],1:["#dde7ff","#1d3a8a"],2:["#adc4ff","#132a6b"],3:["#5b84f0","#ffffff"],4:["#2a4fc0","#ffffff"],5:["#f2b321","#1a1200"]};
 async function buildImage(){
   try{await document.fonts.ready}catch(e){}
   const D="'Big Shoulders Display','Arial Narrow',Impact,sans-serif",B="'Instrument Sans',Arial,sans-serif";
   const res=results(),W=1080,head=230,rowH=118,pad=48,H=head+res.length*rowH+110;
   const cv=document.createElement("canvas");cv.width=W;cv.height=H;const c=cv.getContext("2d");
-  c.fillStyle="#f7f1f4";c.fillRect(0,0,W,H);
-  c.fillStyle="#0e1a3a";c.fillRect(0,0,W,head);c.fillStyle="#e5407f";c.fillRect(0,head-10,W,10);
+  c.fillStyle="#f1f3f8";c.fillRect(0,0,W,H);
+  c.fillStyle="#0e1a3a";c.fillRect(0,0,W,head);c.fillStyle="#f2b321";c.fillRect(0,head-10,W,10);
   c.strokeStyle="rgba(255,255,255,.1)";c.lineWidth=3;c.beginPath();c.arc(W+20,head/2,180,0,Math.PI*2);c.stroke();
-  c.fillStyle="#e5407f";c.font=`700 26px ${B}`;c.fillText("FANTACALCIO · BONUS DIFESA",pad,72);
+  c.fillStyle="#f2b321";c.font=`700 26px ${B}`;c.fillText("FANTACALCIO · BONUS DIFESA",pad,72);
   c.fillStyle="#ffffff";c.font=`900 104px ${D}`;c.fillText("be",pad,180);const bw=c.measureText("be").width;
-  c.fillStyle="#e5407f";c.fillText("Fanta",pad+bw,180);
+  c.fillStyle="#f2b321";c.fillText("Fanta",pad+bw,180);
   c.fillStyle="rgba(255,255,255,.75)";c.font=`600 28px ${B}`;c.textAlign="right";c.fillText(todayStr,W-pad,180);c.textAlign="left";
   const imgs=await Promise.all(res.map(x=>loadImg(x.logo)));
   res.forEach((x,k)=>{const y=head+24+k*rowH;
     c.fillStyle="#ffffff";rr(c,pad-16,y,W-2*(pad-16),rowH-14,22);c.fill();
     const cx=pad+40,cy=y+(rowH-14)/2;
     c.save();c.beginPath();c.arc(cx,cy,38,0,Math.PI*2);c.closePath();c.fillStyle="#fff";c.fill();c.clip();if(imgs[k])c.drawImage(imgs[k],cx-38,cy-38,76,76);c.restore();
-    c.strokeStyle="#ebe1e7";c.lineWidth=3;c.beginPath();c.arc(cx,cy,39,0,Math.PI*2);c.stroke();
+    c.strokeStyle="#e1e5ef";c.lineWidth=3;c.beginPath();c.arc(cx,cy,39,0,Math.PI*2);c.stroke();
     c.fillStyle="#0e1a3a";c.font=`700 34px ${B}`;let nm=x.name;while(c.measureText(nm).width>560&&nm.length>3)nm=nm.slice(0,-2)+"…";
     c.fillText(nm,cx+62,cy-4);
     c.fillStyle="#69708a";c.font=`500 25px ${B}`;c.fillText(x.avg==null?"voti non inseriti":"media "+it(x.avg),cx+62,cy+32);
