@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f5c3c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="beFanta">
+<title>beFanta</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: stadium-scoreboard header + fasce strip; grid of team cards (mini half-pitch with POR + 3 DIF discs, big Media/Bonus); sticky "Classifica" sidebar on desktop, stacked on phone */
+:root{
+  --bg:#eef1ea; --surface:#ffffff; --ink:#0f2419; --muted:#5f6f65; --line:#dbe2d8;
+  --pitch:#1f5c3c; --pitch2:#246844; --chalk:rgba(255,255,255,.55); --disc:#ffffff; --disc-ink:#0f2419;
+  --accent:#1f5c3c; --gold:#e5a019; --gold-ink:#3a2600;
+  --l0:#e4e8e1; --l0-ink:#5f6f65; --l1:#cfe9d7; --l1-ink:#14432a; --l2:#8fd0a7; --l2-ink:#0f3520;
+  --l3:#3fae6e; --l3-ink:#ffffff; --l4:#1f7a47; --l4-ink:#ffffff;
+  --danger:#c8372d; --shadow:0 1px 0 rgba(15,36,25,.04),0 12px 32px -12px rgba(15,36,25,.18);
+  --display:"Big Shoulders Display","Oswald","Arial Narrow",Impact,sans-serif;
+  --body:"Instrument Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0a120d; --surface:#121d16; --ink:#e9f0ea; --muted:#8fa196; --line:#22322a;
+  --pitch:#174a30; --pitch2:#1b5536; --chalk:rgba(255,255,255,.35); --disc:#eef4ef; --disc-ink:#0f2419;
+  --accent:#5fd394; --gold:#f2b544; --gold-ink:#2b1c00;
+  --l0:#1c2a22; --l0-ink:#8fa196; --l1:#1d3a29; --l1-ink:#a9e3bf; --l2:#21573a; --l2-ink:#d6f5e2;
+  --l3:#2e8c57; --l3-ink:#ffffff; --l4:#3fbf78; --l4-ink:#06180d;
+  --danger:#ff7a6e; --shadow:none; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0a120d; --surface:#121d16; --ink:#e9f0ea; --muted:#8fa196; --line:#22322a;
+  --pitch:#174a30; --pitch2:#1b5536; --chalk:rgba(255,255,255,.35); --disc:#eef4ef; --disc-ink:#0f2419;
+  --accent:#5fd394; --gold:#f2b544; --gold-ink:#2b1c00;
+  --l0:#1c2a22; --l0-ink:#8fa196; --l1:#1d3a29; --l1-ink:#a9e3bf; --l2:#21573a; --l2-ink:#d6f5e2;
+  --l3:#2e8c57; --l3-ink:#ffffff; --l4:#3fbf78; --l4-ink:#06180d;
+  --danger:#ff7a6e; --shadow:none; color-scheme:dark}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45;margin:0}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.num{font-family:var(--display);font-variant-numeric:tabular-nums}
+
+/* ---------- Scoreboard header ---------- */
+.board{background:var(--pitch);color:#fff;position:relative;overflow:hidden}
+.board::before{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,transparent 0 64px,rgba(255,255,255,.035) 64px 128px);pointer-events:none}
+.board::after{content:"";position:absolute;right:-120px;top:50%;width:300px;height:300px;border:2px solid rgba(255,255,255,.12);border-radius:50%;transform:translateY(-50%);pointer-events:none}
+.board-in{position:relative;max-width:1180px;margin:0 auto;padding-block:28px 26px;
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));
+  display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 28px}
+.brand{display:grid;gap:6px}
+.wordmark{font-family:var(--display);font-weight:900;font-size:clamp(48px,9vw,84px);line-height:.85;letter-spacing:-.01em;margin:0}
+.wordmark em{font-style:normal;color:var(--gold)}
+.tagline{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.gd{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.22);border-radius:14px;padding:8px 8px 8px 14px}
+.gd label{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+.gd input{width:64px;height:44px;border:0;border-radius:10px;background:#fff;color:#0f2419;text-align:center;font:800 26px var(--display)}
+.ghost{height:44px;padding:0 16px;border-radius:12px;border:1.5px solid rgba(255,255,255,.35);color:#fff;font-weight:600}
+.ghost:hover{background:rgba(255,255,255,.1)}
+
+/* ---------- Fasce strip ---------- */
+.fasce{max-width:1180px;margin:0 auto;padding-block:18px 4px;
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.fasce-row{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.f{border-radius:12px;padding:10px 10px 9px;display:grid;gap:1px;min-width:0}
+.f .b{font:900 24px/1 var(--display)}
+.f .r{font-size:12px;font-weight:600;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lv0{background:var(--l0);color:var(--l0-ink)} .lv1{background:var(--l1);color:var(--l1-ink)} .lv2{background:var(--l2);color:var(--l2-ink)}
+.lv3{background:var(--l3);color:var(--l3-ink)} .lv4{background:var(--l4);color:var(--l4-ink)} .lv5{background:var(--gold);color:var(--gold-ink)}
+.fasce-cap{font-size:12px;color:var(--muted);margin:8px 2px 0}
+
+/* ---------- Main layout ---------- */
+.main{max-width:1180px;margin:0 auto;padding-block:18px 60px;
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));
+  display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;align-items:start}
+.notice{grid-column:1/-1;background:var(--surface);border-left:4px solid var(--gold);border-radius:12px;padding:12px 16px;box-shadow:var(--shadow);font-size:14px}
+.notice .row{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.btn{height:40px;padding:0 16px;border-radius:10px;font-weight:700;font-size:14px;background:var(--l0);color:var(--ink)}
+.btn.red{background:var(--danger);color:#fff}
+.teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;min-width:0}
+
+/* ---------- Team card ---------- */
+.card{background:var(--surface);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;border:1px solid var(--line)}
+.card-head{display:flex;align-items:center;gap:12px;padding:14px 16px 12px;min-width:0}
+.crest{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;color:#fff;font:800 16px var(--display);letter-spacing:.03em;box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)}
+.tname{font:800 21px/1.05 var(--display);text-transform:uppercase;letter-spacing:.01em;min-width:0;overflow-wrap:anywhere;text-wrap:balance}
+.state{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.state.ok{color:var(--accent)}
+
+/* Half pitch: defenders line on top, goal at the bottom */
+.pitch{position:relative;height:200px;margin:0 12px;border-radius:14px;overflow:hidden;
+  background:repeating-linear-gradient(180deg,var(--pitch) 0 25px,var(--pitch2) 25px 50px)}
+.pitch .ln{position:absolute;border:2px solid var(--chalk);pointer-events:none}
+.pitch .box18{left:22%;right:22%;bottom:-2px;height:34%;border-bottom:0}
+.pitch .box6{left:38%;right:38%;bottom:-2px;height:13%;border-bottom:0}
+.pitch .arc{left:50%;bottom:calc(34% - 22px);width:64px;height:44px;transform:translateX(-50%);border-radius:50%;clip-path:inset(0 0 50% 0)}
+.pitch .half{left:-2px;right:-2px;top:-2px;height:0;border-width:2px 0 0}
+.pitch .ctr{left:50%;top:-46px;width:92px;height:92px;transform:translateX(-50%);border-radius:50%}
+.pl{position:absolute;transform:translate(-50%,-50%);display:grid;justify-items:center;gap:3px}
+.pl input{width:58px;height:58px;border-radius:50%;border:3px solid transparent;background:var(--disc);color:var(--disc-ink);
+  text-align:center;font:900 24px var(--display);font-variant-numeric:tabular-nums;box-shadow:0 4px 10px rgba(0,0,0,.28);-webkit-appearance:none;appearance:none;padding:0}
+.pl input::placeholder{color:#a9b5ad}
+.pl input:focus{outline:none;border-color:var(--gold)}
+.pl input.bad{border-color:var(--danger)}
+.pl span{font-size:10px;font-weight:700;letter-spacing:.12em;color:#fff;background:rgba(0,0,0,.35);padding:2px 7px;border-radius:99px}
+.pl.gk input{background:var(--gold);color:var(--gold-ink)}
+.pl.gk input::placeholder{color:rgba(58,38,0,.45)}
+.p0{left:50%;top:78%} .p1{left:18%;top:30%} .p2{left:50%;top:26%} .p3{left:82%;top:30%}
+
+/* Result */
+.res{display:grid;grid-template-columns:1fr 1.1fr;gap:10px;padding:14px 12px 12px}
+.tile{border-radius:16px;padding:12px 14px 11px;display:grid;gap:2px;min-width:0}
+.tile .k{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+.tile .v{font:900 46px/.95 var(--display);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.tile .s{font-size:12px;font-weight:600;opacity:.8;min-height:1.4em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile.media{background:var(--bg);color:var(--ink)}
+.tile.empty .v{opacity:.25}
+.prog{padding:0 14px 16px;display:grid;gap:6px}
+.prog-track{position:relative;height:8px;border-radius:4px;background:var(--l0);overflow:hidden}
+.prog-track i{position:absolute;inset:0 auto 0 0;width:0;border-radius:4px;background:var(--accent)}
+.prog-ticks{display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* ---------- Sidebar ---------- */
+.side{position:sticky;top:calc(16px + env(safe-area-inset-top,0px));display:grid;gap:16px;min-width:0}
+.panel{background:var(--surface);border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden}
+.panel h2{font:800 22px var(--display);text-transform:uppercase;letter-spacing:.02em;margin:0;padding:16px 18px 6px;display:flex;justify-content:space-between;align-items:baseline}
+.panel h2 small{font:600 12px var(--body);letter-spacing:.04em;text-transform:none;color:var(--muted)}
+.rank{list-style:none;margin:0;padding:4px 0 6px}
+.rank li{display:grid;grid-template-columns:22px 30px minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:9px 18px}
+.rank li+li{border-top:1px solid var(--line)}
+.rank .pos{font:800 17px var(--display);color:var(--muted);text-align:center}
+.rank .c{width:30px;height:30px;font-size:12px}
+.rank .n{font-weight:600;font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank .m{font:700 16px var(--display);color:var(--muted);font-variant-numeric:tabular-nums}
+.tag{min-width:50px;text-align:center;border-radius:99px;padding:3px 10px;font:900 18px var(--display);font-variant-numeric:tabular-nums}
+.tag.na{background:var(--l0);color:var(--l0-ink)}
+.panel-foot{padding:12px 18px 18px;display:grid;gap:10px;border-top:1px solid var(--line)}
+.meter{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);font-weight:600}
+.bar{height:6px;border-radius:3px;background:var(--l0);overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--accent)}
+.cta{height:50px;border-radius:14px;background:var(--ink);color:var(--surface);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px}
+.cta:hover{filter:brightness(1.12)}
+#copyArea{width:100%;min-height:170px;font:13px/1.45 ui-monospace,Menlo,monospace;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px}
+details.panel{padding:0}
+details.panel summary{list-style:none;cursor:pointer;font:800 18px var(--display);text-transform:uppercase;letter-spacing:.02em;padding:14px 18px;display:flex;justify-content:space-between}
+details.panel summary::-webkit-details-marker{display:none}
+details.panel summary::after{content:"+";color:var(--muted)}
+details.panel[open] summary::after{content:"–"}
+.rules{padding:0 18px 16px}
+.rules table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.rules th,.rules td{padding:7px 4px;text-align:left;border-bottom:1px solid var(--line);font-size:14px}
+.rules th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.rules input{width:68px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--bg);text-align:center;font:700 16px var(--display)}
+.small{font-size:12.5px;color:var(--muted);margin:10px 0 6px}
+.linkbtn{color:var(--accent);font-weight:700;font-size:14px;padding:4px 0}
+
+footer{max-width:1180px;margin:0 auto;padding-block:0 40px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));color:var(--muted);font-size:12.5px}
+
+/* ---------- Responsive ---------- */
+@media (max-width:920px){
+  .main{grid-template-columns:minmax(0,1fr)}
+  .side{position:static}
+}
+@media (max-width:560px){
+  .fasce-row{grid-template-columns:repeat(3,1fr)}
+  .teams{grid-template-columns:minmax(0,1fr)}
+  .board-in{padding-block:22px 20px}
+  .tile .v{font-size:42px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .tile,.tag{transition:background-color .25s,color .25s}
+  .prog-track i,.bar i{transition:width .35s cubic-bezier(.2,.8,.2,1)}
+  .pop{animation:pop .32s cubic-bezier(.2,.8,.2,1)}
+  @keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+}
+</style>
+</head>
+<body>
+
+
+<header class="board">
+  <div class="board-in">
+    <div class="brand">
+      <div class="tagline">Fantacalcio · Bonus difesa</div>
+      <h1 class="wordmark">be<em>Fanta</em></h1>
+    </div>
+    <div class="controls">
+      <div class="gd"><label for="giornata">Giornata</label><input id="giornata" inputmode="numeric" placeholder="–" aria-label="Numero giornata"></div>
+      <button class="ghost" id="reset" type="button">Nuova giornata</button>
+    </div>
+  </div>
+</header>
+
+<section class="fasce" aria-label="Fasce bonus">
+  <div class="fasce-row" id="fasce"></div>
+  <p class="fasce-cap">Media dei voti di portiere + 3 migliori difensori. Configurazione D Factor consigliata.</p>
+</section>
+
+<main class="main">
+  <div class="notice" id="exampleNote" hidden>Due squadre hanno voti di esempio per mostrarti come funziona. Premi <b>Nuova giornata</b> per azzerare tutto e iniziare.</div>
+  <div class="notice" id="confirmBox" hidden>
+    <b>Iniziare una nuova giornata?</b> Tutti i voti inseriti verranno cancellati.
+    <div class="row"><button class="btn red" id="confirmYes" type="button">Sì, azzera i voti</button><button class="btn" id="confirmNo" type="button">Annulla</button></div>
+  </div>
+
+  <div class="teams" id="teams"></div>
+
+  <aside class="side">
+    <section class="panel">
+      <h2>Classifica bonus <small id="gLabel"></small></h2>
+      <ol class="rank" id="rank"></ol>
+      <div class="panel-foot">
+        <div class="meter"><span id="count">0 di 8 squadre</span><span id="pct">0%</span></div>
+        <div class="bar"><i id="barFill"></i></div>
+        <button class="cta" id="copy" type="button">Copia risultati per WhatsApp</button>
+        <textarea id="copyArea" readonly hidden aria-label="Testo dei risultati"></textarea>
+      </div>
+    </section>
+    <details class="panel" id="rulesPanel">
+      <summary>Modifica fasce</summary>
+      <div class="rules">
+        <table><thead><tr><th>Da (≥)</th><th>A (&lt;)</th><th>Bonus</th></tr></thead><tbody id="rulesBody"></tbody></table>
+        <p class="small">Media sotto la prima soglia = nessun bonus. Le modifiche si applicano subito a tutte le squadre.</p>
+        <button class="linkbtn" id="resetRules" type="button">Ripristina configurazione consigliata</button>
+      </div>
+    </details>
+  </aside>
+</main>
+<footer>beFanta · i voti restano salvati su questo dispositivo.</footer>
+
+<script>
+const TEAMS=[
+  {n:"Amaro Luciano FC",c:"#b4621b"},{n:"CRAPATINAIKOS",c:"#2b3f9f"},{n:"MACCHIAbi tel aviv",c:"#1a2b6d"},{n:"PRAGOL 23",c:"#3b3b3b"},
+  {n:"S.C. ARSENAL",c:"#c8241e"},{n:"HALMA(X)",c:"#525a66"},{n:"Cioca Boca Juniors",c:"#1c4096"},{n:"Genereal Madrid",c:"#8a6c1e"}];
+const DEFAULT_RULES=[[6,0.5],[6.25,1],[6.5,1.5],[6.75,2],[7,3]];
+const EXAMPLE=[["6","6,5","6","6"],["7","7","6,5","7,5"],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""]];
+const KEY="befanta.v1";
+let state;
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.votes&&s.rules)return s}catch(e){}
+  return {votes:EXAMPLE.map(r=>r.slice()),rules:DEFAULT_RULES.map(r=>r.slice()),example:true,g:""}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+state=load();
+
+const it=n=>(Math.round(n*1000)/1000).toLocaleString("it-IT",{maximumFractionDigits:3});
+const fmtB=n=>(n>0?"+":"")+n.toLocaleString("it-IT");
+const parseVote=v=>{v=String(v??"").trim().replace(",",".");if(v==="")return null;const n=Number(v);return (isFinite(n)&&n>=0&&n<=10)?n:NaN};
+const rules=()=>[...state.rules].sort((a,b)=>a[0]-b[0]);
+const level=avg=>{let l=0;rules().forEach(([t],i)=>{if(avg>=t-1e-9)l=i+1});return l};
+const bonusAt=l=>l===0?0:rules()[l-1][1];
+const lv=l=>"lv"+Math.min(l,5);
+function initials(n){const w=n.replace(/[^A-Za-zÀ-ú0-9 ]/g," ").trim().split(/\s+/).filter(x=>!/^(fc|sc|s|c)$/i.test(x));
+  return w.length>1?(w[0][0]+w[1][0]).toUpperCase():w[0].slice(0,2).toUpperCase()}
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* Fasce strip */
+function renderFasce(){const r=rules();
+  const items=[{b:0,r:"media < "+it(r[0][0])}].concat(r.map((x,i)=>({b:x[1],r:r[i+1]?`${it(x[0])} – ${it(r[i+1][0])}`:`media ≥ ${it(x[0])}`})));
+  document.getElementById("fasce").innerHTML=items.map((x,i)=>`<div class="f ${lv(i)}"><span class="b">${fmtB(x.b)}</span><span class="r">${x.r}</span></div>`).join("")}
+
+/* Team cards */
+const teamsEl=document.getElementById("teams");
+const POS=[["POR","gk p0"],["DIF","p1"],["DIF","p2"],["DIF","p3"]];
+TEAMS.forEach((t,i)=>{
+  const el=document.createElement("article");el.className="card";el.setAttribute("aria-label",t.n);
+  el.innerHTML=`<div class="card-head"><div class="crest" style="background:${t.c}">${initials(t.n)}</div>
+      <div class="tname">${esc(t.n)}</div><div class="state" id="st${i}"></div></div>
+    <div class="pitch">
+      <i class="ln half"></i><i class="ln ctr"></i><i class="ln box18"></i><i class="ln box6"></i><i class="ln arc"></i>
+      ${[1,2,3,0].map(j=>`<div class="pl ${POS[j][1]}"><input id="v${i}_${j}" inputmode="decimal" enterkeyhint="next" autocomplete="off" placeholder="–"
+        aria-label="${t.n} – ${j===0?"portiere":"difensore "+j}" value="${esc(state.votes[i][j]||"")}"><span>${POS[j][0]}</span></div>`).join("")}
+    </div>
+    <div class="res">
+      <div class="tile media" id="mt${i}"><span class="k">Media</span><span class="v" id="avg${i}">–</span><span class="s" id="ms${i}"></span></div>
+      <div class="tile lv0" id="bt${i}"><span class="k">Bonus difesa</span><span class="v" id="bon${i}">–</span><span class="s" id="bs${i}"></span></div>
+    </div>
+    <div class="prog"><div class="prog-track"><i id="pf${i}"></i></div><div class="prog-ticks" id="pt${i}"></div></div>`;
+  teamsEl.appendChild(el);
+});
+// order of tabbing: POR, DIF1, DIF2, DIF3
+const ORDER=[];TEAMS.forEach((_,i)=>[0,1,2,3].forEach(j=>ORDER.push(`v${i}_${j}`)));
+teamsEl.addEventListener("input",e=>{const m=e.target.id.match(/^v(\d+)_(\d)$/);if(!m)return;
+  state.votes[m[1]][m[2]]=e.target.value;state.example=false;save();render(+m[1])});
+teamsEl.addEventListener("keydown",e=>{if(e.key!=="Enter")return;const k=ORDER.indexOf(e.target.id);if(k<0)return;e.preventDefault();
+  const nx=document.getElementById(ORDER[k+1]);if(nx){nx.focus();nx.select()}else e.target.blur()});
+
+const g=document.getElementById("giornata");g.value=state.g||"";
+g.addEventListener("input",()=>{state.g=g.value.replace(/\D/g,"");g.value=state.g;save();render()});
+
+function results(){return TEAMS.map((t,i)=>{const vals=state.votes[i].map(parseVote);
+  const filled=vals.filter(v=>v!==null&&!Number.isNaN(v)).length;const ok=filled===4;
+  const avg=ok?vals.reduce((a,b)=>a+b,0)/4:null;const l=ok?level(avg):null;
+  return {i,name:t.n,vals,filled,avg,l,bonus:ok?bonusAt(l):null}})}
+
+const last={};
+function render(changed){
+  const res=results(),r=rules();let done=0;
+  const lo=5.5,hi=Math.max(7.5,r[r.length-1][0]+.5);
+  res.forEach(x=>{const i=x.i;
+    x.vals.forEach((v,j)=>document.getElementById(`v${i}_${j}`).classList.toggle("bad",Number.isNaN(v)));
+    const mt=document.getElementById("mt"+i),bt=document.getElementById("bt"+i),st=document.getElementById("st"+i);
+    const avg=document.getElementById("avg"+i),bon=document.getElementById("bon"+i),ms=document.getElementById("ms"+i),bs=document.getElementById("bs"+i);
+    const pf=document.getElementById("pf"+i);
+    if(x.avg==null){
+      mt.className="tile media empty";bt.className="tile lv0 empty";avg.textContent="–";bon.textContent="–";
+      ms.textContent=x.filled?`mancano ${4-x.filled} voti`:"inserisci i 4 voti";bs.textContent="";
+      st.textContent=x.filled?`${x.filled}/4 voti`:"";st.className="state";pf.style.width="0";
+    }else{done++;
+      mt.className="tile media";bt.className="tile "+lv(x.l);
+      avg.textContent=it(x.avg);bon.textContent=fmtB(x.bonus);
+      const sum=x.vals.reduce((a,b)=>a+b,0);ms.textContent=`${it(sum)} ÷ 4`;
+      if(x.l<r.length){const nt=r[x.l];bs.textContent=`+${it(nt[0]-x.avg)} per ${fmtB(nt[1])}`}else bs.textContent="bonus massimo";
+      st.textContent="✓ completa";st.className="state ok";
+      pf.style.width=Math.max(2,Math.min(100,(x.avg-lo)/(hi-lo)*100))+"%";
+      const key=x.bonus;if(changed===i&&last[i]!==undefined&&last[i]!==key){bt.classList.remove("pop");void bt.offsetWidth;bt.classList.add("pop")}last[i]=key;
+    }
+    document.getElementById("pt"+i).innerHTML=r.map(q=>`<span>${it(q[0])}</span>`).join("");
+  });
+  // ticks spacing reflects real scale
+  document.querySelectorAll(".prog-ticks").forEach(el=>{el.style.paddingLeft=((r[0][0]-lo)/(hi-lo)*100-3)+"%";el.style.paddingRight=((hi-r[r.length-1][0])/(hi-lo)*100-3)+"%"});
+  const n=TEAMS.length;document.getElementById("count").textContent=`${done} di ${n} squadre`;
+  document.getElementById("pct").textContent=Math.round(done/n*100)+"%";
+  document.getElementById("barFill").style.width=(done/n*100)+"%";
+  document.getElementById("gLabel").textContent=state.g?`Giornata ${state.g}`:"";
+  document.getElementById("exampleNote").hidden=!state.example;
+  const sorted=[...res].sort((a,b)=>(b.bonus??-1)-(a.bonus??-1)||(b.avg??-1)-(a.avg??-1));
+  document.getElementById("rank").innerHTML=sorted.map((x,k)=>`<li><span class="pos">${x.avg==null?"–":k+1}</span>
+    <span class="crest c" style="background:${TEAMS[x.i].c}">${initials(x.name)}</span><span class="n">${esc(x.name)}</span>
+    <span class="m">${x.avg==null?"":it(x.avg)}</span><span class="tag ${x.avg==null?"na":lv(x.l)}">${x.avg==null?"–":fmtB(x.bonus)}</span></li>`).join("");
+}
+
+/* Rules editor */
+function renderRules(){const s=state.rules.map((r,k)=>({r,k})).sort((a,b)=>a.r[0]-b.r[0]);
+  document.getElementById("rulesBody").innerHTML=`<tr><td>—</td><td>${it(s[0].r[0])}</td><td>0</td></tr>`+s.map(({r,k},idx)=>
+    `<tr><td><input id="rt${k}" inputmode="decimal" value="${it(r[0])}" aria-label="Soglia"></td><td>${s[idx+1]?it(s[idx+1].r[0]):"—"}</td>
+     <td><input id="rb${k}" inputmode="decimal" value="${it(r[1])}" aria-label="Bonus"></td></tr>`).join("")}
+document.getElementById("rulesBody").addEventListener("change",e=>{const m=e.target.id.match(/^r([tb])(\d+)$/);if(!m)return;
+  const n=Number(e.target.value.trim().replace(",","."));if(e.target.value.trim()!==""&&isFinite(n))state.rules[m[2]][m[1]==="t"?0:1]=n;
+  save();renderRules();renderFasce();render()});
+document.getElementById("resetRules").onclick=()=>{state.rules=DEFAULT_RULES.map(r=>r.slice());save();renderRules();renderFasce();render()};
+
+/* New matchday */
+const cb=document.getElementById("confirmBox");
+document.getElementById("reset").onclick=()=>{cb.hidden=false;cb.scrollIntoView({behavior:"smooth",block:"center"})};
+document.getElementById("confirmNo").onclick=()=>{cb.hidden=true};
+document.getElementById("confirmYes").onclick=()=>{state.votes=TEAMS.map(()=>["","","",""]);state.example=false;
+  if(state.g)state.g=String(+state.g+1);g.value=state.g;save();
+  document.querySelectorAll("#teams input").forEach(x=>x.value="");cb.hidden=true;render();
+  document.getElementById("v0_0").focus({preventScroll:true});document.querySelector(".card").scrollIntoView({behavior:"smooth",block:"start"})};
+
+/* Copy */
+function text(){return ["🛡️ Bonus difesa"+(state.g?` · Giornata ${state.g}`:""),""].concat(
+  [...results()].sort((a,b)=>(b.bonus??-1)-(a.bonus??-1)||(b.avg??-1)-(a.avg??-1))
+  .map(x=>x.avg==null?`${x.name}: voti mancanti`:`${x.name}: ${it(x.avg)} → ${fmtB(x.bonus)}`)).join("\n")}
+document.getElementById("copy").onclick=()=>{const t=text(),btn=document.getElementById("copy"),a=document.getElementById("copyArea");
+  const fb=()=>{a.hidden=false;a.value=t;a.focus();a.select();btn.textContent="Seleziona e copia il testo"};
+  try{navigator.clipboard.writeText(t).then(()=>{btn.textContent="Copiato ✓";setTimeout(()=>btn.textContent="Copia risultati per WhatsApp",1800)},fb)}catch(e){fb()}};
+
+renderFasce();renderRules();render();
+</script>
+
+</body>
+</html>
