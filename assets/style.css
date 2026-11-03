@@ -174,9 +174,32 @@ footer{max-width:1180px;margin:0 auto;padding-block:0 40px;color:var(--faint);fo
   .tile .v{font-size:38px}
 }
 @media (prefers-reduced-motion:reduce){.list li.fresh{animation:none}}
+/* Motion: one spring curve everywhere, iOS-like */
+:root{--spring:cubic-bezier(.22,1,.36,1);--ease:cubic-bezier(.25,.1,.25,1)}
 @media (prefers-reduced-motion:no-preference){
-  .tile,.tag{transition:background .25s,color .25s}
-  .prog-track i,.bar i{transition:width .35s cubic-bezier(.2,.8,.2,1)}
-  .pop{animation:pop .34s cubic-bezier(.2,.8,.2,1)}
-  @keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+  html{scroll-behavior:smooth}
+  .tile,.tag{transition:background .35s var(--ease),color .35s var(--ease),box-shadow .35s var(--ease)}
+  .prog-track i,.bar i{transition:width .55s var(--spring)}
+  .pop{animation:pop .45s var(--spring)}
+  @keyframes pop{0%{transform:scale(.92)}55%{transform:scale(1.04)}100%{transform:scale(1)}}
+  .tick{animation:tick .35s var(--spring)}
+  @keyframes tick{0%{opacity:.35;transform:translateY(6px)}100%{opacity:1;transform:none}}
+  /* press feedback on every button */
+  button,.nav a{transition:transform .18s var(--spring),filter .2s var(--ease),background-color .25s var(--ease),color .25s var(--ease),box-shadow .25s var(--ease)}
+  button:active,.nav a:active{transform:scale(.96)}
+  .seg button:active{transform:none}
+  /* vote discs: lift when focused, soft pop when filled */
+  .disc{transition:transform .3s var(--spring),box-shadow .3s var(--ease)}
+  .disc:focus-within{transform:scale(1.08)}
+  .disc.filled-pop{animation:pop .4s var(--spring)}
+  .state{transition:color .3s var(--ease)}
+  .card{transition:transform .35s var(--spring),box-shadow .35s var(--ease)}
+  .card:focus-within{transform:translateY(-2px)}
+  /* modals: fade + sheet rise in, reverse on close */
+  .overlay{transition:opacity .28s var(--ease),-webkit-backdrop-filter .28s var(--ease),backdrop-filter .28s var(--ease)}
+  .overlay .dialog{transition:transform .45s var(--spring),opacity .3s var(--ease)}
+  .overlay:not(.show){opacity:0}
+  .overlay:not(.show) .dialog{transform:translateY(28px) scale(.96);opacity:0}
+  .overlay.closing{transition-duration:.22s}
+  .overlay.closing .dialog{transition:transform .22s var(--ease),opacity .2s var(--ease)}
 }

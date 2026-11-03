@@ -45,7 +45,7 @@ TEAMS.forEach((t,i)=>{
 });
 const ORDER=[];TEAMS.forEach((_,i)=>[0,1,2,3].forEach(j=>ORDER.push(`v${i}_${j}`)));
 teamsEl.addEventListener("input",e=>{const m=e.target.id.match(/^v(\d+)_(\d)$/);if(!m)return;
-  state.votes[m[1]][m[2]]=cleanVote(e.target.value);if(state.votes[m[1]][m[2]]!==e.target.value)e.target.value=state.votes[m[1]][m[2]];state.example=false;save();render(+m[1])});
+  state.votes[m[1]][m[2]]=cleanVote(e.target.value);{const d=e.target.parentElement,ok=parseVote(e.target.value);if(ok!=null&&!isNaN(ok)&&!d.dataset.f){d.dataset.f=1;d.classList.remove("filled-pop");void d.offsetWidth;d.classList.add("filled-pop")}if(e.target.value==="")delete d.dataset.f}if(state.votes[m[1]][m[2]]!==e.target.value)e.target.value=state.votes[m[1]][m[2]];state.example=false;save();render(+m[1])});
 teamsEl.addEventListener("keydown",e=>{if(e.key!=="Enter")return;const k=ORDER.indexOf(e.target.id);if(k<0)return;e.preventDefault();
   const nx=document.getElementById(ORDER[k+1]);if(nx){nx.focus();nx.select()}else e.target.blur()});
 
@@ -83,6 +83,7 @@ function render(changed){
       lt.className="tag "+lv(x.l);lt.textContent=fmtB(x.bonus);lm.textContent="media "+it(x.avg);
     }
     const key=x.avg==null?"":x.bonus+"|"+x.avg;
+    if(changed===i&&last[i]!==undefined&&last[i]!==key){const v=$("avg");v.classList.remove("tick");void v.offsetWidth;v.classList.add("tick")}
     if(changed===i&&last[i]!==undefined&&last[i]!==key&&x.avg!=null){
       const li=$("li");li.classList.remove("fresh");void li.offsetWidth;li.classList.add("fresh");
       if(String(last[i]).split("|")[0]!==String(x.bonus)){bt.classList.remove("pop");void bt.offsetWidth;bt.classList.add("pop")}}
@@ -100,14 +101,19 @@ const navT=document.getElementById("navTeams"),navL=document.getElementById("nav
 [navT,navL].forEach(a=>a.addEventListener("click",e=>{e.preventDefault();document.querySelector(a.getAttribute("href")).scrollIntoView({behavior:"smooth",block:"start"});
   navT.classList.toggle("on",a===navT);navL.classList.toggle("on",a===navL)}));
 
+/* Smooth open/close for the two windows */
+function openModal(el){el.hidden=false;el.classList.remove("closing");void el.offsetWidth;requestAnimationFrame(()=>el.classList.add("show"))}
+function closeModal(el){if(el.hidden)return;el.classList.add("closing");el.classList.remove("show");
+  const done=()=>{el.hidden=true;el.classList.remove("closing")};
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return done();setTimeout(done,240)}
 const conf=document.getElementById("confirm");
-document.getElementById("reset").onclick=()=>{conf.hidden=false;document.getElementById("cNo").focus()};
-document.getElementById("cNo").onclick=()=>{conf.hidden=true};
-conf.addEventListener("click",e=>{if(e.target===conf)conf.hidden=true});
+document.getElementById("reset").onclick=()=>{openModal(conf);document.getElementById("cNo").focus({preventScroll:true})};
+document.getElementById("cNo").onclick=()=>closeModal(conf);
+conf.addEventListener("click",e=>{if(e.target===conf)closeModal(conf)});
 document.getElementById("cYes").onclick=()=>{state.votes=TEAMS.map(()=>["","","",""]);state.example=false;save();
-  document.querySelectorAll("#squadre input").forEach(x=>x.value="");conf.hidden=true;render();
+  document.querySelectorAll("#squadre input").forEach(x=>x.value="");closeModal(conf);render();
   teamsEl.scrollIntoView({behavior:"smooth",block:"start"})};
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){conf.hidden=true;document.getElementById("imgModal").hidden=true}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeModal(conf);closeModal(document.getElementById("imgModal"))}});
 
 function loadImg(src){return new Promise(r=>{const im=new Image();im.onload=()=>r(im);im.onerror=()=>r(null);im.src=src})}
 function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
@@ -174,16 +180,17 @@ document.getElementById("download").onclick=async()=>{
     document.getElementById("iShare").hidden=!share;
     document.getElementById("iSave").hidden=share;
     document.getElementById("iHint").textContent=share?"":"Se il salvataggio non parte (succede nelle anteprime), tieni premuto sull'immagine e scegli «Salva in Foto».";
-    document.getElementById("imgModal").hidden=false;
+    openModal(document.getElementById("imgModal"));
     track.scrollLeft=view==="detail"?track.scrollWidth:0;seg.style.setProperty("--p",view==="detail"?1:0);markView(view);
   }finally{btn.disabled=false}};
 document.getElementById("iShare").onclick=()=>{const shot=shots[view];if(!shot)return;
-  navigator.share({files:[shot.file],title:"Bonus difesa"}).then(()=>{document.getElementById("imgModal").hidden=true}).catch(e=>{
+  navigator.share({files:[shot.file],title:"Bonus difesa"}).then(()=>closeModal(document.getElementById("imgModal"))).catch(e=>{
     if(!e||e.name!=="AbortError")document.getElementById("iHint").textContent="Condivisione non disponibile qui: tieni premuto sull'immagine e scegli «Salva in Foto»."})};
 document.getElementById("iSave").onclick=()=>{const shot=shots[view];if(!shot)return;
   try{const a=document.createElement("a");a.href=shot.url;a.download=shot.name;document.body.appendChild(a);a.click();a.remove()}catch(e){}
   document.getElementById("iHint").textContent="Immagine salvata nei Download. Se non la trovi, tieni premuto sull'immagine (o clic destro) e scegli «Salva immagine»."};
-document.getElementById("iClose").onclick=()=>{document.getElementById("imgModal").hidden=true};
+document.getElementById("iClose").onclick=()=>closeModal(document.getElementById("imgModal"));
+document.getElementById("imgModal").addEventListener("click",e=>{if(e.target.id==="imgModal")closeModal(e.target)});
 
 function text(){return ["🛡️ Bonus difesa · "+todayStr,""].concat(results().map(x=>x.avg==null?`${x.name}: voti mancanti`:`${x.name}: media ${it(x.avg)} → ${fmtB(x.bonus)}`)).join("\n")}
 document.getElementById("copy").onclick=()=>{const t=text(),btn=document.getElementById("copy"),a=document.getElementById("copyArea");
