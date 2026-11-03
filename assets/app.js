@@ -158,9 +158,11 @@ async function makeShot(){const cv=await buildImage(view);const url=cv.toDataURL
   const name=(view==="detail"?"dettaglio-voti-":"bonus-difesa-")+new Date().toISOString().slice(0,10)+".png";
   shot={url,name,file:new File([blob],name,{type:"image/png"})};
   const p=document.getElementById("iPrev");p.src=url;p.alt=view==="detail"?"Dettaglio voti":"Lista bonus difesa";return shot}
-function setView(v){view=v;[["vList","list"],["vDet","detail"]].forEach(([id,k])=>{const b=document.getElementById(id);b.classList.toggle("on",k===v);b.setAttribute("aria-selected",k===v)})}
-document.getElementById("vList").onclick=async()=>{if(view==="list")return;setView("list");await makeShot()};
-document.getElementById("vDet").onclick=async()=>{if(view==="detail")return;setView("detail");await makeShot()};
+function setView(v){view=v;document.querySelector(".seg").classList.toggle("right",v==="detail");[["vList","list"],["vDet","detail"]].forEach(([id,k])=>{const b=document.getElementById(id);b.classList.toggle("on",k===v);b.setAttribute("aria-selected",k===v)})}
+async function switchTo(v){if(view===v)return;setView(v);const p=document.getElementById("iPrev");p.classList.add("fading");
+  await Promise.all([makeShot(),new Promise(r=>setTimeout(r,200))]);requestAnimationFrame(()=>p.classList.remove("fading"))}
+document.getElementById("vList").onclick=()=>switchTo("list");
+document.getElementById("vDet").onclick=()=>switchTo("detail");
 document.getElementById("download").onclick=async()=>{
   const btn=document.getElementById("download");btn.disabled=true;
   try{await makeShot();const share=canShareFiles(shot.file);
