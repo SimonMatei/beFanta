@@ -150,33 +150,37 @@ async function buildImage(mode){
   return cv;
 }
 /* Build the image first, then let the user share/save it with a fresh tap (iPhone requires the tap for the share sheet) */
-let shot=null;
+let shots={list:null,detail:null},view="list";
 const canShareFiles=f=>{try{return !!(navigator.canShare&&navigator.canShare({files:[f]}))}catch(e){return false}};
-let view="list";
-async function makeShot(){const cv=await buildImage(view);const url=cv.toDataURL("image/png");
+async function render1(kind){const cv=await buildImage(kind);const url=cv.toDataURL("image/png");
   const blob=await new Promise(r=>cv.toBlob(r,"image/png"));
-  const name=(view==="detail"?"dettaglio-voti-":"bonus-difesa-")+new Date().toISOString().slice(0,10)+".png";
-  shot={url,name,file:new File([blob],name,{type:"image/png"})};
-  const p=document.getElementById("iPrev");p.src=url;p.alt=view==="detail"?"Dettaglio voti":"Lista bonus difesa";return shot}
-function setView(v){view=v;document.querySelector(".seg").classList.toggle("right",v==="detail");[["vList","list"],["vDet","detail"]].forEach(([id,k])=>{const b=document.getElementById(id);b.classList.toggle("on",k===v);b.setAttribute("aria-selected",k===v)})}
-async function switchTo(v){if(view===v)return;setView(v);const p=document.getElementById("iPrev");p.classList.add("fading");
-  await Promise.all([makeShot(),new Promise(r=>setTimeout(r,200))]);requestAnimationFrame(()=>p.classList.remove("fading"))}
-document.getElementById("vList").onclick=()=>switchTo("list");
-document.getElementById("vDet").onclick=()=>switchTo("detail");
+  const name=(kind==="detail"?"dettaglio-voti-":"bonus-difesa-")+new Date().toISOString().slice(0,10)+".png";
+  return {url,name,file:new File([blob],name,{type:"image/png"})}}
+const track=document.getElementById("track"),seg=document.querySelector(".seg");
+const reduce=()=>window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+function markView(v){view=v;[["vList","list"],["vDet","detail"]].forEach(([id,k])=>{const b=document.getElementById(id);b.classList.toggle("on",k===v);b.setAttribute("aria-selected",k===v)})}
+let raf=0;
+track.addEventListener("scroll",()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;
+  const max=track.scrollWidth-track.clientWidth||1,p=Math.min(1,Math.max(0,track.scrollLeft/max));
+  seg.style.setProperty("--p",p);const v=p>.5?"detail":"list";if(v!==view)markView(v)})},{passive:true});
+function goTo(v){const left=v==="detail"?track.scrollWidth:0;track.scrollTo({left,behavior:reduce()?"auto":"smooth"})}
+document.getElementById("vList").onclick=()=>goTo("list");
+document.getElementById("vDet").onclick=()=>goTo("detail");
 document.getElementById("download").onclick=async()=>{
   const btn=document.getElementById("download");btn.disabled=true;
-  try{await makeShot();const share=canShareFiles(shot.file);
+  try{[shots.list,shots.detail]=await Promise.all([render1("list"),render1("detail")]);
+    document.getElementById("iPrevL").src=shots.list.url;document.getElementById("iPrevD").src=shots.detail.url;
+    const share=canShareFiles(shots.list.file);
     document.getElementById("iShare").hidden=!share;
     document.getElementById("iSave").hidden=share;
-    document.getElementById("iHint").textContent=share
-      ?""
-      :"Se il salvataggio non parte (succede nelle anteprime), tieni premuto sull'immagine e scegli «Salva in Foto».";
+    document.getElementById("iHint").textContent=share?"":"Se il salvataggio non parte (succede nelle anteprime), tieni premuto sull'immagine e scegli «Salva in Foto».";
     document.getElementById("imgModal").hidden=false;
+    track.scrollLeft=view==="detail"?track.scrollWidth:0;seg.style.setProperty("--p",view==="detail"?1:0);markView(view);
   }finally{btn.disabled=false}};
-document.getElementById("iShare").onclick=()=>{if(!shot)return;
+document.getElementById("iShare").onclick=()=>{const shot=shots[view];if(!shot)return;
   navigator.share({files:[shot.file],title:"Bonus difesa"}).then(()=>{document.getElementById("imgModal").hidden=true}).catch(e=>{
     if(!e||e.name!=="AbortError")document.getElementById("iHint").textContent="Condivisione non disponibile qui: tieni premuto sull'immagine e scegli «Salva in Foto»."})};
-document.getElementById("iSave").onclick=()=>{if(!shot)return;
+document.getElementById("iSave").onclick=()=>{const shot=shots[view];if(!shot)return;
   try{const a=document.createElement("a");a.href=shot.url;a.download=shot.name;document.body.appendChild(a);a.click();a.remove()}catch(e){}
   document.getElementById("iHint").textContent="Immagine salvata nei Download. Se non la trovi, tieni premuto sull'immagine (o clic destro) e scegli «Salva immagine»."};
 document.getElementById("iClose").onclick=()=>{document.getElementById("imgModal").hidden=true};
