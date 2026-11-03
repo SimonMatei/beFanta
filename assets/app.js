@@ -115,7 +115,7 @@ const LV={0:["rgba(255,255,255,.08)","rgba(226,245,237,.6)"],1:["rgba(159,242,20
 async function buildImage(){
   try{await document.fonts.ready}catch(e){}
   const S="Manrope,Arial,sans-serif",U="Manrope,Arial,sans-serif";
-  const res=results(),W=1080,head=250,rowH=118,pad=48,H=head+res.length*rowH+110;
+  const res=results(),W=780,head=250,rowH=118,pad=48,H=head+res.length*rowH+40;
   const cv=document.createElement("canvas");cv.width=W;cv.height=H;const c=cv.getContext("2d");
   const g=c.createRadialGradient(W/2,H*.18,40,W/2,H*.18,H*.85);g.addColorStop(0,"#13896a");g.addColorStop(.38,"#0a5a43");g.addColorStop(1,"#03241b");
   c.fillStyle=g;c.fillRect(0,0,W,H);
@@ -128,14 +128,13 @@ async function buildImage(){
     c.strokeStyle="rgba(255,255,255,.12)";c.lineWidth=2;c.stroke();
     const cx=pad+40,cy=y+(rowH-14)/2;
     c.save();c.beginPath();c.arc(cx,cy,38,0,Math.PI*2);c.closePath();c.fillStyle="#fff";c.fill();c.clip();if(imgs[k])c.drawImage(imgs[k],cx-38,cy-38,76,76);c.restore();
-    c.fillStyle="#f2fbf7";c.font=`800 34px ${U}`;let nm=x.name;while(c.measureText(nm).width>560&&nm.length>3)nm=nm.slice(0,-2)+"…";
+    c.fillStyle="#f2fbf7";c.font=`800 34px ${U}`;let nm=x.name;while(c.measureText(nm).width>W-pad-150-(cx+62)-20&&nm.length>3)nm=nm.slice(0,-2)+"…";
     c.fillText(nm,cx+62,cy-4);
     c.fillStyle="rgba(226,245,237,.66)";c.font=`600 25px ${U}`;c.fillText(x.avg==null?"voti non inseriti":"media "+it(x.avg),cx+62,cy+32);
-    const [bg,fg]=x.avg==null?LV[0]:LV[Math.min(x.l,5)];const tw=150,th=64,tx=W-pad-tw+4,ty=cy-th/2;
+    const [bg,fg]=x.avg==null?LV[0]:LV[Math.min(x.l,5)];const tw=130,th=64,tx=W-pad-tw+4,ty=cy-th/2;
     c.fillStyle=bg;rr(c,tx,ty,tw,th,32);c.fill();c.fillStyle=fg;c.textAlign="center";
     c.font=x.avg==null?`600 24px ${U}`:`800 38px ${U}`;c.fillText(x.avg==null?"–":fmtB(x.bonus),tx+tw/2,ty+th/2+(x.avg==null?9:13));c.textAlign="left";
   });
-  c.fillStyle="rgba(226,245,237,.5)";c.font=`500 24px ${U}`;c.fillText("Media di portiere + 3 migliori difensori · fasce D Factor",pad,H-46);
   return cv;
 }
 /* Build the image first, then let the user share/save it with a fresh tap (iPhone requires the tap for the share sheet) */
