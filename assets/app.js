@@ -154,7 +154,7 @@ document.getElementById("download").onclick=async()=>{
     document.getElementById("iShare").hidden=!share;
     document.getElementById("iSave").hidden=share;
     document.getElementById("iHint").textContent=share
-      ?"Si apre il menu Condividi: scegli WhatsApp per inviarla all'admin, oppure «Salva immagine» per tenerla nelle Foto."
+      ?"Si apre il menu Condividi: puoi inviarla su WhatsApp o in un'altra app, oppure scegliere «Salva immagine» per tenerla nelle Foto."
       :"Se il salvataggio non parte (succede nelle anteprime), tieni premuto sull'immagine e scegli «Salva in Foto».";
     document.getElementById("imgModal").hidden=false;
   }finally{btn.disabled=false}};
