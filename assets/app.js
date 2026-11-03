@@ -43,6 +43,7 @@ TEAMS.forEach((t,i)=>{
     <div class="prog"><div class="prog-track"><i id="pf${i}"></i></div><div class="prog-ticks" id="pt${i}"></div></div>`;
   teamsEl.appendChild(el);
 });
+teamsEl.addEventListener("focusin",e=>{if(e.target.matches(".pl input"))requestAnimationFrame(()=>{try{e.target.select()}catch(_){}})});
 const ORDER=[];TEAMS.forEach((_,i)=>[0,1,2,3].forEach(j=>ORDER.push(`v${i}_${j}`)));
 teamsEl.addEventListener("input",e=>{const m=e.target.id.match(/^v(\d+)_(\d)$/);if(!m)return;
   state.votes[m[1]][m[2]]=cleanVote(e.target.value);{const d=e.target.parentElement,ok=parseVote(e.target.value);if(ok!=null&&!isNaN(ok)&&!d.dataset.f){d.dataset.f=1;d.classList.remove("filled-pop");void d.offsetWidth;d.classList.add("filled-pop")}if(e.target.value==="")delete d.dataset.f}if(state.votes[m[1]][m[2]]!==e.target.value)e.target.value=state.votes[m[1]][m[2]];state.example=false;save();render(+m[1])});
