@@ -11,9 +11,9 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@1,700&family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
-/* Layout: one deep-emerald world lit from the centre, floating bubbles; glass header with pill nav + dark pill action;
+/* Layout: one deep-emerald world lit from the centre; glass header with pill nav + dark pill action;
    glass team cards (emerald half-pitch, glossy vote discs, big Media/Bonus); glass "Lista bonus" sticky on desktop, stacked on phone */
 :root{
   color-scheme:dark;
@@ -26,7 +26,7 @@
   --l1:rgba(159,242,208,.16); --l1-ink:#c8f8e4; --l2:rgba(159,242,208,.32); --l2-ink:#e6fff4;
   --l3:#5fdcae; --l3-ink:#03241b; --l4:#9ff2d0; --l4-ink:#03241b; --l5-ink:#ffffff;
   --danger:#ff7b84;
-  --script:"Lobster Two","Brush Script MT",cursive;
+  --script:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   --ui:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
 }
 [hidden]{display:none!important}
@@ -41,21 +41,14 @@ button{cursor:pointer;border:0;background:none}
 .gutter{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
 .glass{background:var(--glass);border:1px solid var(--edge);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 
-.bubbles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.bubbles i{position:absolute;border-radius:50%;border:1.5px solid rgba(255,255,255,.28);
-  background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.35) 0 8%,transparent 22%)}
-@media (prefers-reduced-motion:no-preference){
-  .bubbles i{animation:rise var(--d) ease-in-out infinite;animation-delay:var(--dl)}
-  @keyframes rise{0%,100%{transform:translate(0,0)}50%{transform:translate(6px,-26px)}}
-}
 .wrap{position:relative;z-index:1}
 
 .top{max-width:1180px;margin:0 auto;padding-block:22px 8px;display:flex;align-items:center;justify-content:space-between;gap:14px}
 .logo-mark{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
 .logo-mark svg{width:30px;height:30px}
-.logo-mark b{font:italic 700 26px/1 var(--script)}
-.nav{display:flex;gap:4px;padding:4px;border-radius:999px}
-.nav a{padding:8px 16px;border-radius:999px;color:var(--muted);text-decoration:none;font-weight:600;font-size:14px;white-space:nowrap}
+.logo-mark b{font:800 22px/1 var(--script);letter-spacing:-.02em}
+.nav{display:flex;gap:4px;padding:5px;border-radius:999px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2)}
+.nav a{padding:9px 18px;border-radius:999px;color:rgba(226,245,237,.8);text-decoration:none;font-weight:500;font-size:15px;white-space:nowrap}
 .nav a.on{background:var(--mint);color:var(--mint-ink)}
 .nav a:not(.on):hover{color:var(--ink)}
 .pill-dark{height:44px;padding:0 20px;border-radius:999px;background:var(--night);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;gap:8px;white-space:nowrap;box-shadow:0 8px 24px -10px rgba(0,0,0,.6)}
@@ -63,7 +56,7 @@ button{cursor:pointer;border:0;background:none}
 .pill-dark svg{width:16px;height:16px}
 
 .hero{max-width:1180px;margin:0 auto;padding-block:26px 8px}
-.hero h1{margin:0;font:italic 700 clamp(56px,10vw,112px)/.95 var(--script);text-shadow:0 10px 40px rgba(0,0,0,.25);text-wrap:balance}
+.hero h1{margin:0;font:700 clamp(48px,8.5vw,96px)/1 var(--script);letter-spacing:-.045em;text-shadow:0 10px 40px rgba(0,0,0,.25);text-wrap:balance}
 .hero h1 span{color:var(--mint)}
 .hero p{margin:12px 0 0;color:var(--muted);font-size:16px;max-width:52ch}
 
@@ -116,7 +109,7 @@ button{cursor:pointer;border:0;background:none}
 .side{position:sticky;top:calc(16px + env(safe-area-inset-top,0px));display:grid;gap:16px;min-width:0;scroll-margin-top:20px}
 .panel{border-radius:26px;overflow:hidden;box-shadow:0 20px 50px -30px rgba(0,0,0,.7)}
 .panel-top{padding:18px 20px 8px;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.panel-top h2{margin:0;font:italic 700 30px/1 var(--script)}
+.panel-top h2{margin:0;font:700 22px/1.1 var(--script);letter-spacing:-.02em}
 .panel-top small{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
 .list{list-style:none;margin:0;padding:6px 8px}
 .list li{display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:12px;padding:9px 12px;border-radius:16px}
@@ -153,7 +146,7 @@ details.panel[open] summary::after{content:"–"}
 .overlay{position:fixed;inset:0;z-index:50;background:rgba(2,16,12,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:grid;place-items:center;
   padding:max(20px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(20px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .dialog{background:#0b3b2e;border:1px solid var(--edge-hi);border-radius:28px;max-width:420px;width:100%;padding:24px;display:grid;gap:14px;box-shadow:0 30px 70px -20px rgba(0,0,0,.7);max-height:100%;overflow:auto}
-.dialog h3{font:italic 700 32px/1 var(--script);margin:0}
+.dialog h3{font:700 24px/1.15 var(--script);letter-spacing:-.02em;margin:0}
 .dialog p{margin:0;color:var(--muted)}
 .dialog .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .btn{height:48px;border-radius:999px;font-weight:800;background:var(--glass-hi);border:1px solid var(--edge)}
@@ -180,17 +173,6 @@ footer{max-width:1180px;margin:0 auto;padding-block:0 40px;color:var(--faint);fo
 </head>
 <body>
 
-
-<div class="bubbles" aria-hidden="true">
-  <i style="left:6%;top:30%;width:26px;height:26px;--d:9s;--dl:-2s"></i>
-  <i style="left:38%;top:14%;width:22px;height:22px;--d:11s;--dl:-5s"></i>
-  <i style="left:58%;top:24%;width:16px;height:16px;--d:8s;--dl:-1s"></i>
-  <i style="left:80%;top:12%;width:30px;height:30px;--d:12s;--dl:-7s"></i>
-  <i style="left:93%;top:42%;width:20px;height:20px;--d:10s;--dl:-3s"></i>
-  <i style="left:12%;top:72%;width:14px;height:14px;--d:9s;--dl:-4s"></i>
-  <i style="left:72%;top:66%;width:24px;height:24px;--d:13s;--dl:-6s"></i>
-  <i style="left:46%;top:88%;width:18px;height:18px;--d:10s;--dl:-8s"></i>
-</div>
 
 <div class="wrap">
   <header class="top gutter">
@@ -377,13 +359,12 @@ function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);
 const LV={0:["rgba(255,255,255,.08)","rgba(226,245,237,.6)"],1:["rgba(159,242,208,.18)","#c8f8e4"],2:["rgba(159,242,208,.34)","#e6fff4"],3:["#5fdcae","#03241b"],4:["#9ff2d0","#03241b"],5:["#e3303f","#ffffff"]};
 async function buildImage(){
   try{await document.fonts.ready}catch(e){}
-  const S="'Lobster Two','Brush Script MT',cursive",U="Manrope,Arial,sans-serif";
+  const S="Manrope,Arial,sans-serif",U="Manrope,Arial,sans-serif";
   const res=results(),W=1080,head=250,rowH=118,pad=48,H=head+res.length*rowH+110;
   const cv=document.createElement("canvas");cv.width=W;cv.height=H;const c=cv.getContext("2d");
   const g=c.createRadialGradient(W/2,H*.18,40,W/2,H*.18,H*.85);g.addColorStop(0,"#13896a");g.addColorStop(.38,"#0a5a43");g.addColorStop(1,"#03241b");
   c.fillStyle=g;c.fillRect(0,0,W,H);
-  c.strokeStyle="rgba(255,255,255,.25)";c.lineWidth=2.5;[[90,70,16],[860,60,22],[990,170,12],[600,40,10]].forEach(([x,y,r])=>{c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.stroke()});
-  c.fillStyle="#ffffff";c.font=`italic 700 110px ${S}`;c.fillText("Bonus",pad,170);const bw=c.measureText("Bonus ").width;
+    c.fillStyle="#ffffff";c.font=`700 96px ${S}`;c.fillText("Bonus",pad,170);const bw=c.measureText("Bonus ").width;
   c.fillStyle="#9ff2d0";c.fillText("difesa",pad+bw,170);
   c.fillStyle="rgba(226,245,237,.7)";c.font=`600 28px ${U}`;c.fillText("beFanta · "+todayStr,pad,222);
   const imgs=await Promise.all(res.map(x=>loadImg(x.logo)));
