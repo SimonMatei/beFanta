@@ -34,7 +34,7 @@ TEAMS.forEach((t,i)=>{
   const el=document.createElement("article");el.className="card glass";el.setAttribute("aria-label",t.n);
   el.innerHTML=`<div class="card-head"><img class="crest" src="${t.logo}" alt=""><div class="tname">${esc(t.n)}</div><div class="state" id="st${i}"></div></div>
     <div class="pitch"><i class="ln half"></i><i class="ln ctr"></i><i class="ln box18"></i><i class="ln box6"></i>
-      ${[1,2,3,0].map(j=>`<div class="pl ${POS[j][1]}"><div class="disc"><input id="v${i}_${j}" inputmode="decimal" enterkeyhint="next" autocomplete="off" maxlength="5" placeholder=""
+      ${[1,2,3,0].map(j=>`<div class="pl ${POS[j][1]}"><div class="disc"><input id="v${i}_${j}" inputmode="decimal" enterkeyhint="next" autocomplete="off" maxlength="5" placeholder="–"
         aria-label="${esc(t.n)} – ${j===0?"portiere":"difensore "+j}" value="${esc(state.votes[i][j]||"")}"></div><span>${POS[j][0]}</span></div>`).join("")}</div>
     <div class="res">
       <div class="tile media" id="mt${i}"><span class="k">Media</span><span class="v" id="avg${i}">–</span><span class="s" id="ms${i}"></span></div>
