@@ -185,7 +185,7 @@ document.getElementById("download").onclick=async()=>{
     track.scrollLeft=view==="detail"?track.scrollWidth:0;seg.style.setProperty("--p",view==="detail"?1:0);markView(view);
   }finally{btn.disabled=false}};
 document.getElementById("iShare").onclick=()=>{const shot=shots[view];if(!shot)return;
-  navigator.share({files:[shot.file],title:"Bonus difesa"}).then(()=>closeModal(document.getElementById("imgModal"))).catch(e=>{
+  navigator.share({files:[shot.file]}).then(()=>closeModal(document.getElementById("imgModal"))).catch(e=>{
     if(!e||e.name!=="AbortError")document.getElementById("iHint").textContent="Condivisione non disponibile qui: tieni premuto sull'immagine e scegli «Salva in Foto»."})};
 document.getElementById("iSave").onclick=()=>{const shot=shots[view];if(!shot)return;
   try{const a=document.createElement("a");a.href=shot.url;a.download=shot.name;document.body.appendChild(a);a.click();a.remove()}catch(e){}
