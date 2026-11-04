@@ -85,6 +85,7 @@ button{cursor:pointer;border:0;background:none}
 .pl.gk .disc{background:radial-gradient(circle at 34% 28%,#ff6a74 0 22%,#e3303f 60%,#b81d2b 100%)}
 .pl.gk input{color:#fff}
 .pl.gk input::placeholder{color:rgba(255,255,255,.65)}
+.pl.gk input:focus::placeholder{color:transparent}
 .p0{left:50%;top:78%} .p1{left:18%;top:30%} .p2{left:50%;top:26%} .p3{left:82%;top:30%}
 
 .res{display:grid;grid-template-columns:1fr 1.1fr;gap:10px;padding:14px 12px 12px}
